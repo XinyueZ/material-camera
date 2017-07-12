@@ -1,17 +1,10 @@
 package com.afollestad.materialcamera.internal;
 
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.CAMERA_POSITION_BACK;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.CAMERA_POSITION_FRONT;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.CAMERA_POSITION_UNKNOWN;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_ALWAYS_ON;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_AUTO;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_OFF;
-
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -40,7 +33,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -48,11 +43,13 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Toast;
+
 import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.util.CameraUtil;
 import com.afollestad.materialcamera.util.Degrees;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -64,6 +61,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.CAMERA_POSITION_BACK;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.CAMERA_POSITION_FRONT;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.CAMERA_POSITION_UNKNOWN;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_ALWAYS_ON;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_AUTO;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_OFF;
 
 /** @author Aidan Follestad (afollestad) */
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -269,11 +273,14 @@ public class Camera2Fragment extends BaseCameraFragment implements View.OnClickL
         }
       };
 
+
+
   public static Camera2Fragment newInstance() {
     Camera2Fragment fragment = new Camera2Fragment();
     fragment.setRetainInstance(true);
     return fragment;
   }
+
 
   private static Size chooseVideoSize(BaseCaptureInterface ci, Size[] choices) {
     Size backupSize = null;
@@ -415,6 +422,7 @@ public class Camera2Fragment extends BaseCameraFragment implements View.OnClickL
     }
   }
 
+  @SuppressLint("MissingPermission")
   @Override
   public void openCamera() {
     final int width = mTextureView.getWidth();
@@ -1079,7 +1087,8 @@ public class Camera2Fragment extends BaseCameraFragment implements View.OnClickL
     }
   }
 
-  public static class ErrorDialog extends DialogFragment {
+  public static class ErrorDialog extends AppCompatDialogFragment {
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       final Activity activity = getActivity();

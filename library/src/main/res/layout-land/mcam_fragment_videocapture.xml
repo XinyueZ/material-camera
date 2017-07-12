@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootFrame"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:foreground="?selectableItemBackground">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/rootFrame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?selectableItemBackground">
 
     <include
         layout="@layout/mcam_include_camera_preview"
@@ -34,7 +34,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/mcam_circle_selector"
-            android:padding="@dimen/mcam_content_inset_less"
+            android:padding="@dimen/mcam_content_inset_less" android:visibility="gone"
             android:scaleType="fitXY"
             tools:ignore="ContentDescription"
             tools:src="@drawable/mcam_camera_front" />

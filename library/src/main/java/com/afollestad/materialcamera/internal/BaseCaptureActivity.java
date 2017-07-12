@@ -2,7 +2,6 @@ package com.afollestad.materialcamera.internal;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,17 +16,20 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
 import com.afollestad.materialcamera.MaterialCamera;
 import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.TimeLimitReachedException;
 import com.afollestad.materialcamera.util.CameraUtil;
 import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -85,7 +87,7 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
   }
 
   @Override
-  protected final void onCreate(Bundle savedInstanceState) {
+  protected   void onCreate(Bundle savedInstanceState) {
     AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     super.onCreate(savedInstanceState);
 
@@ -104,7 +106,7 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
           .show();
       return;
     }
-    setContentView(R.layout.mcam_activity_videocapture);
+    setContentView(getLayout());
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       final int primaryColor = getIntent().getIntExtra(CameraIntentKey.PRIMARY_COLOR, 0);
@@ -145,7 +147,11 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
                 | WindowManager.LayoutParams.FLAG_FULLSCREEN);
   }
 
-  private void checkPermissions() {
+  protected int getLayout() {
+    return R.layout.mcam_activity_videocapture;
+  }
+
+  protected void checkPermissions() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
       showInitialRecorder();
       return;
@@ -179,15 +185,11 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
     }
   }
 
-  @Override
-  protected final void onPause() {
-    super.onPause();
-    if (!isFinishing() && !isChangingConfigurations() && !mRequestingPermission) finish();
-  }
+
 
   @Override
-  public final void onBackPressed() {
-    Fragment frag = getFragmentManager().findFragmentById(R.id.container);
+  public   void onBackPressed() {
+    Fragment frag = getSupportFragmentManager().findFragmentById(R.id.container);
     if (frag != null) {
       if (frag instanceof PlaybackVideoFragment && allowRetry()) {
         onRetry(((CameraUriInterface) frag).getOutputUri());
@@ -197,6 +199,9 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
       } else if (frag instanceof BaseGalleryFragment && allowRetry()) {
         onRetry(((CameraUriInterface) frag).getOutputUri());
         return;
+      } else {
+        super.onBackPressed();
+        return;
       }
     }
     finish();
@@ -205,7 +210,7 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
   @NonNull
   public abstract Fragment getFragment();
 
-  public final Fragment createFragment() {
+  public   Fragment createFragment() {
     Fragment frag = getFragment();
     frag.setArguments(getIntent().getExtras());
     return frag;
@@ -296,7 +301,7 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
   }
 
   private void showInitialRecorder() {
-    getFragmentManager().beginTransaction().replace(R.id.container, createFragment()).commit();
+    getSupportFragmentManager().beginTransaction().replace(R.id.container, createFragment()).commit();
   }
 
   @Override
@@ -310,7 +315,7 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
       finish();
       return;
     }
-    getFragmentManager().beginTransaction().replace(R.id.container, createFragment()).commit();
+    getSupportFragmentManager().beginTransaction().replace(R.id.container, createFragment()).commit();
   }
 
   @Override
@@ -333,7 +338,7 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
       Fragment frag =
           PlaybackVideoFragment.newInstance(
               outputUri, allowRetry(), getIntent().getIntExtra(CameraIntentKey.PRIMARY_COLOR, 0));
-      getFragmentManager().beginTransaction().replace(R.id.container, frag).commit();
+      getSupportFragmentManager().beginTransaction().replace(R.id.container, frag).commit();
     }
   }
 
@@ -345,7 +350,7 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
       Fragment frag =
           StillshotPreviewFragment.newInstance(
               outputUri, allowRetry(), getIntent().getIntExtra(CameraIntentKey.PRIMARY_COLOR, 0));
-      getFragmentManager().beginTransaction().replace(R.id.container, frag).commit();
+      getSupportFragmentManager().beginTransaction().replace(R.id.container, frag).commit();
     }
   }
 
@@ -366,13 +371,13 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
   }
 
   @Override
-  protected final void onActivityResult(int requestCode, int resultCode, Intent data) {
+  protected   void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == PERMISSION_RC) showInitialRecorder();
   }
 
   @Override
-  public final void onRequestPermissionsResult(
+  public   void onRequestPermissionsResult(
       int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     mRequestingPermission = false;
@@ -403,7 +408,6 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
               .putExtra(MaterialCamera.STATUS_EXTRA, MaterialCamera.STATUS_RECORDED)
               .setDataAndType(Uri.parse(uri), useStillshot() ? "image/jpeg" : "video/mp4"));
     }
-    finish();
   }
 
   @Override

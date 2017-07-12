@@ -1,14 +1,7 @@
 package com.afollestad.materialcamera.internal;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.CAMERA_POSITION_BACK;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_ALWAYS_ON;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_AUTO;
-import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_OFF;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
@@ -20,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.content.res.AppCompatResources;
@@ -30,16 +24,24 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.afollestad.materialcamera.MaterialCamera;
 import com.afollestad.materialcamera.R;
 import com.afollestad.materialcamera.util.CameraUtil;
 import com.afollestad.materialcamera.util.Degrees;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.io.File;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.CAMERA_POSITION_BACK;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_ALWAYS_ON;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_AUTO;
+import static com.afollestad.materialcamera.internal.BaseCaptureActivity.FLASH_MODE_OFF;
+
 /** @author Aidan Follestad (afollestad) */
-abstract class BaseCameraFragment extends Fragment
+public abstract class BaseCameraFragment extends Fragment
     implements CameraUriInterface, View.OnClickListener {
 
   protected ImageButton mButtonVideo;
