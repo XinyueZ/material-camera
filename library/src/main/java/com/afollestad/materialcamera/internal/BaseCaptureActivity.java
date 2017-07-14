@@ -402,12 +402,18 @@ public abstract class BaseCaptureActivity extends AppCompatActivity
   @Override
   public final void useMedia(String uri) {
     if (uri != null) {
+      Intent intent =   getIntent()
+              .putExtra(MaterialCamera.STATUS_EXTRA, MaterialCamera.STATUS_RECORDED)
+              .setDataAndType(Uri.parse(uri), useStillshot() ? "image/jpeg" : "video/mp4");
+      onUseMedia(useStillshot(), intent);
       setResult(
           Activity.RESULT_OK,
-          getIntent()
-              .putExtra(MaterialCamera.STATUS_EXTRA, MaterialCamera.STATUS_RECORDED)
-              .setDataAndType(Uri.parse(uri), useStillshot() ? "image/jpeg" : "video/mp4"));
+          intent);
     }
+  }
+
+  protected void onUseMedia(boolean isStillshot, @NonNull Intent intent) {
+
   }
 
   @Override
